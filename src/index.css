@@ -1,68 +1,130 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* Importing Google Fonts - Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
 }
 
 body {
-  margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
+  background: black;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  width: 100%;
+  padding: 0 0.6rem;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.form-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login-container {
+  max-width: 410px;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.login-form .input-wrapper {
+  height: 54px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-form .input-wrapper i {
+  color: #c1c1c1;
+  position: absolute;
+}
+
+.login-form .input-wrapper i:not(.eye-icon) {
+  left: 0.9rem;
+  pointer-events: none;
+}
+
+.login-form .input-wrapper i.eye-icon {
+  font-size: 1.25rem;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  right: 0.9rem;
+  display: none;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.login-form .input-wrapper .input-field {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  font-size: 1.06rem;
+  border-radius: 0.31rem;
+  border: 1px solid #c1c1c1;
+  padding: 0 1.25rem 0 3.12rem;
+  transition: 0.2s ease;
+} 
+
+.login-form .input-wrapper .input-field:valid ~ i.eye-icon {
+  display: block;
+}
+
+.login-form .input-wrapper .input-field:focus {
+  border-color: black;
+}
+
+.login-form .input-wrapper .input-field:focus ~i:not(.eye-icon) {
+  color: grey;
+}
+
+.login-form .input-wrapper .input-field::placeholder {
+  color: #c1c1c1;
+}
+
+.login-form .login-button {
+  width: 100%;
+  height: 50px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.125rem;
+  background: #219CA7;
+  margin-top: 1rem;
+  border-radius: 0.31rem;
+  transition: 0.2s ease;
+}
+
+.login-form .login-button:hover {
+  background-color: #1d848e;
+}
+
+.login-form .forgot-pass-link {
+  display: block;
+  width: fit-content;
+  margin-top: -0.46rem;
+}
+
+.login-container .signup-text {
+  text-align: center;
+  font-weight: 500;
+  margin: 1.75rem 0 0.31rem;
+}
+
+.login-container a {
+  color: #1d848e;
+  text-decoration: none;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
 }
