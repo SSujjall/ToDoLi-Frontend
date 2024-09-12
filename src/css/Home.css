@@ -1,0 +1,12 @@
+.home-container {
+    display: flex;
+    height: 100vh;
+    flex-direction: row;
+}
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    /* Same as sidebar width */
+    
+}

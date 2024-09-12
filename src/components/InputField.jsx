@@ -1,6 +1,6 @@
 import { useState } from "react";
 // eslint-disable-next-line react/prop-types
-const InputField = ({ type, placeholder, icon }) => {
+const InputField = ({ type, placeholder, icon, value, onChange }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
   return (
@@ -9,6 +9,8 @@ const InputField = ({ type, placeholder, icon }) => {
         type={isPasswordShown ? "text" : type}
         placeholder={placeholder}
         className="input-field"
+        value={value}
+        onChange={onChange}
         required
       />
       <i className="material-symbols-rounded">{icon}</i>
