@@ -53,8 +53,19 @@
 
 .list-items {
     list-style: none;
-    padding: 0;
+    padding-right: 2px;
     margin: 0;
+    max-height: 25.8rem;
+    overflow-y: auto;
+}
+
+.list-items::-webkit-scrollbar {
+    width: 4px; /* Width of the scrollbar */
+}
+
+.list-items::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Round the corners of the scrollbar thumb */
 }
 
 .list-content {
