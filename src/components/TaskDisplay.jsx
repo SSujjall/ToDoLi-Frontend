@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { fetchTasks } from "../services/Api";
 import '../css/ListDisplay.css';
 
-const ListDisplay = ({ listId, listName }) => {
+const TaskDisplay = ({ listId, listName }) => {
   const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getTasks = async () => {
       try {
+        setTasks([]);
         const data = await fetchTasks(listId); // Fetch tasks based on listId
         setTasks(data);
       } catch (err) {
-        setError(err.message);
+        console.error(err.message);
       }
     };
 
@@ -25,7 +25,6 @@ const ListDisplay = ({ listId, listName }) => {
   return (
     <div>
       <h1>{listName}</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <table className="list-table">
         <thead>
           <tr>
@@ -35,17 +34,23 @@ const ListDisplay = ({ listId, listName }) => {
           </tr>
         </thead>
         <tbody>
-          {tasks.map(task => (
-            <tr key={task.id}>
-              <td>{task.id}</td>
-              <td>{task.taskName}</td>
-              <td>{task.status}</td>
+          {tasks.length === 0 ? (
+            <tr>
+              <td colSpan="3">No tasks found.</td>
             </tr>
-          ))}
+          ) : (
+            tasks.map(task => (
+              <tr key={task.id}>
+                <td>{task.id}</td>
+                <td>{task.taskName}</td>
+                <td>{task.status}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
 };
 
-export default ListDisplay;
+export default TaskDisplay;
