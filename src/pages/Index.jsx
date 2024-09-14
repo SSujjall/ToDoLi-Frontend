@@ -15,7 +15,7 @@ const Index = () => {
         <Sidebar onSelectItem={handleSelectItem} />
         <main className="main-content">
           {selectedItem ? (
-            <ListDisplay listId={selectedItem.id} />
+            <ListDisplay listId={selectedItem.id} listName={selectedItem.listName} />
           ) : (
             <p>Select a list from the sidebar to view its tasks.</p>
           )}

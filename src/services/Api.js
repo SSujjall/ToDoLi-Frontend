@@ -83,3 +83,41 @@ export const fetchTasks = async (listId) => {
   const result = await response.json();
   return result.data; // Adjust according to your API response structure
 };
+
+export const addList = async (listName) => {
+  const response = await fetch(`${API_BASE_URL}/List/AddList`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+    body: JSON.stringify({ listName }),
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to add list");
+  }
+
+  const result = await response.json();
+  return result;
+
+}
+
+export const deleteList = async (listId) => {
+  const response = await fetch(`${API_BASE_URL}/List/DeleteList/${listId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to delete list");
+  }
+
+  const result = await response.json();
+  return result;
+}

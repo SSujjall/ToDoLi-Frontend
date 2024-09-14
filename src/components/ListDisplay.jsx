@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchTasks } from "../services/Api";
 import '../css/ListDisplay.css';
 
-const ListDisplay = ({ listId }) => {
+const ListDisplay = ({ listId, listName }) => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
 
@@ -24,7 +24,7 @@ const ListDisplay = ({ listId }) => {
 
   return (
     <div>
-      <h1>Tasks for List {listId}</h1>
+      <h1>{listName}</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <table className="list-table">
         <thead>
