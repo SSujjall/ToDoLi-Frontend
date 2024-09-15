@@ -6,6 +6,7 @@ import { Card } from "./Card";
 import "../css/Card.css";
 import "../css/Sidebar.css";
 import InputField from "./InputField";
+import ConfirmationModal from "./DeleteModal";
 
 // eslint-disable-next-line react/prop-types
 const Sidebar = ({ onSelectItem }) => {
@@ -13,6 +14,9 @@ const Sidebar = ({ onSelectItem }) => {
   const [error, setError] = useState(null);
   const [newListName, setNewListName] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [selectedListId, setSelectedListId] = useState(null); // Store selected list for deletion
+  const [filter, setFilter] = useState("all");
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
@@ -20,6 +24,7 @@ const Sidebar = ({ onSelectItem }) => {
       try {
         const data = await fetchList();
         setList(data); // Directly set the list data
+        setError(null);
       } catch (err) {
         setError(err.message);
       }
@@ -60,11 +65,27 @@ const Sidebar = ({ onSelectItem }) => {
   const handleDeleteListItem = async (listId) => {
     try {
       await deleteList(listId);
-      const updatedList = await fetchList();
-      setList(updatedList);
+      setList((prevList) => prevList.filter((item) => item.id !== listId));
+      setError(null);
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  const openModal = (listId) => {
+    setSelectedListId(listId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = () => {
+    if (selectedListId) {
+      handleDeleteListItem(selectedListId);
+    }
+    closeModal(); // Close the modal after confirming
   };
 
   const calculateTotalLists = () => {
@@ -79,6 +100,23 @@ const Sidebar = ({ onSelectItem }) => {
       today.getDate()
     );
     return list.filter((item) => new Date(item.createdAt) >= startOfDay).length;
+  };
+
+  const handleCardClick = (filterType) => {
+    setFilter(filterType);
+  };
+
+  const getFilteredLists = () => {
+    if (filter === "today") {
+      const today = new Date();
+      const startOfDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+      return list.filter((item) => new Date(item.createdAt) >= startOfDay);
+    }
+    return list; // "all" filter shows all lists
   };
 
   return (
@@ -99,43 +137,54 @@ const Sidebar = ({ onSelectItem }) => {
                 icon={"today"}
                 title={"Today"}
                 value={calculateTodayLists()}
+                onClick={() => handleCardClick("today")}
               />
               <Card
                 icon={"calendar_month"}
                 title={"Total"}
                 value={calculateTotalLists()}
+                onClick={() => handleCardClick("all")}
               />
             </div>
 
             <h1> My Lists </h1>
-            
+
             {/* List Items */}
-            <ul className="list-items">
-              {list.map((item) => (
-                <li key={item.id}>
-                  <div
-                    className="list-content"
-                    onClick={() => onSelectItem(item)}
-                  >
-                    <span>
-                      <i className="material-symbols-rounded">list</i>
-                      {item.listName}
-                    </span>
-                  </div>
-                  <Button
-                    icon={"delete"}
-                    onClick={() => handleDeleteListItem(item.id)}
-                  />
-                </li>
-              ))}
-            </ul>
+            {getFilteredLists().length === 0 ? (
+              <div className="empty-list">
+                <p>No lists available</p>
+              </div> // Show a message if the list is empty
+            ) : (
+
+              // Display list items
+              <ul className="list-items">
+                {getFilteredLists().map((item) => (
+                  <li key={item.id}>
+                    <div
+                      className="list-content"
+                      onClick={() => onSelectItem(item)}
+                    >
+                      <span>
+                        <i className="material-symbols-rounded">list</i>
+                        {item.listName}
+                      </span>
+                    </div>
+                    <Button
+                      icon={"delete"}
+                      onClick={() => openModal(item.id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            
             {/* Add List Input and Button */}
             <div className="add-list-container">
               <InputField
                 type="text"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
-                placeholder="New List Name"
+                placeholder="Add List"
               />
               <Button icon={"Add"} onClick={handleAddList} />
             </div>
@@ -147,6 +196,13 @@ const Sidebar = ({ onSelectItem }) => {
       <button className="logout-button" onClick={handleLogout}>
         Logout
       </button>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        message="Are you sure you want to delete this list?"
+      />
     </div>
   );
 };

@@ -59,9 +59,13 @@ export const fetchList = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`, // Include the token in the Authorization header
+      Authorization: `Bearer ${token}`, // Include the token in the Authorization header
     },
   });
+
+  if(response.status === 400){
+    return [];
+  }
 
   if (!response.ok) {
     throw new Error("Failed to fetch list");
@@ -74,8 +78,8 @@ export const fetchList = async () => {
 export const fetchTasks = async (listId) => {
   const response = await fetch(`${API_BASE_URL}/Tasks/GetAll/${listId}`, {
     headers: {
-      'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch tasks: ${response.statusText}`);
@@ -89,7 +93,7 @@ export const addList = async (listName) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
     },
     body: JSON.stringify({ listName }),
   });
@@ -101,15 +105,14 @@ export const addList = async (listName) => {
 
   const result = await response.json();
   return result;
-
-}
+};
 
 export const deleteList = async (listId) => {
   const response = await fetch(`${API_BASE_URL}/List/DeleteList/${listId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
     },
   });
 
@@ -120,4 +123,4 @@ export const deleteList = async (listId) => {
 
   const result = await response.json();
   return result;
-}
+};
