@@ -63,7 +63,7 @@ export const fetchList = async () => {
     },
   });
 
-  if(response.status === 400){
+  if (response.status === 400) {
     return [];
   }
 
@@ -119,6 +119,25 @@ export const deleteList = async (listId) => {
   if (!response.ok) {
     const result = await response.json();
     throw new Error(result.errors[0] || "Failed to delete list");
+  }
+
+  const result = await response.json();
+  return result;
+};
+
+export const addTask = async (taskName, description, dueDate, listId) => {
+  const response = await fetch(`${API_BASE_URL}/Tasks/AddTask`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+    body: JSON.stringify({ taskName, description, dueDate, listId }),
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to add task");
   }
 
   const result = await response.json();

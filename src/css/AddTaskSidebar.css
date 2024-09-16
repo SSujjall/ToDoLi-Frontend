@@ -1,0 +1,85 @@
+.sidebar-open .task-content {
+  margin-right: 25rem; /* Adjust based on the width of the sidebar */
+}
+
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.list-table th, .list-table td {
+  border: 1px solid #ddd;
+}
+
+.add-task-sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 25rem; /* Adjust width as needed */
+  height: 100%;
+  background-color: #f4f4f4;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.task-form label {
+  margin-bottom: 5px;
+}
+
+.task-form input,
+.task-form textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-form-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-task-btn,
+.delete-task-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-task-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.delete-task-btn {
+  background-color: #f44336;
+  color: white;
+}

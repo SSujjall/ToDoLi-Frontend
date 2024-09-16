@@ -1,3 +1,24 @@
+.task-display-container {
+    display: flex;
+    position: relative;
+    transition: margin-right 0.3s ease;
+}
+
+.task-content {
+    flex: 1;
+    transition: margin-right 0.3s ease;
+}
+
+.task-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.task-header button {
+    width: 10rem;
+}
+
 .list-table {
     width: 100%;
     border-collapse: collapse;

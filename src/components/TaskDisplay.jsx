@@ -1,15 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { fetchTasks } from "../services/Api";
-import '../css/ListDisplay.css';
+import '../css/TaskDisplay.css';
+import AddTaskSidebar from "./AddTaskSidebar";
+import { Button } from "./Button";
 
 const TaskDisplay = ({ listId, listName }) => {
   const [tasks, setTasks] = useState([]);
+  const [isAddTaskSidebarOpen, setIsAddTaskSidebarOpen] = useState(false);
 
   useEffect(() => {
     const getTasks = async () => {
       try {
-        setTasks([]);
+        setTasks([]); // Clear tasks while loading new data
         const data = await fetchTasks(listId); // Fetch tasks based on listId
         setTasks(data);
       } catch (err) {
@@ -22,33 +25,63 @@ const TaskDisplay = ({ listId, listName }) => {
     }
   }, [listId]);
 
+  // Function to refresh tasks
+  const refreshTasks = async () => {
+    try {
+      const data = await fetchTasks(listId);
+      setTasks(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  // Toggle sidebar visibility
+  const handleAddTaskClick = () => {
+    setIsAddTaskSidebarOpen(!isAddTaskSidebarOpen);
+  };
+
   return (
-    <div>
-      <h1>{listName}</h1>
-      <table className="list-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Task Name</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.length === 0 ? (
+    <div className={`task-display-container ${isAddTaskSidebarOpen ? 'sidebar-open' : ''}`}>
+      <div className="task-content">
+        <div className="task-header">
+          <h1>{listName}</h1>
+          <Button text={"Add Task"} onClick={handleAddTaskClick}></Button>
+        </div>
+
+        <table className="list-table">
+          <thead>
             <tr>
-              <td colSpan="3">No tasks found.</td>
+              <th>ID</th>
+              <th>Task Name</th>
+              <th>Status</th>
             </tr>
-          ) : (
-            tasks.map(task => (
-              <tr key={task.id}>
-                <td>{task.id}</td>
-                <td>{task.taskName}</td>
-                <td>{task.status}</td>
+          </thead>
+          <tbody>
+            {tasks.length === 0 ? (
+              <tr>
+                <td colSpan="3">No tasks found.</td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              tasks.map((task) => (
+                <tr key={task.id}>
+                  <td>{task.id}</td>
+                  <td>{task.taskName}</td>
+                  <td>{task.status}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Conditionally render AddTaskSidebar */}
+      {isAddTaskSidebarOpen && (
+        <AddTaskSidebar
+          onClose={handleAddTaskClick} // Pass function to close sidebar
+          listId={listId} // Pass the listId to the sidebar
+          onTaskAdded={refreshTasks} // Pass function to refresh tasks
+        />
+      )}
     </div>
   );
 };
