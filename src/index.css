@@ -71,9 +71,9 @@ body {
   border: 1px solid #c1c1c1;
   padding: 0 1.25rem 0 3.12rem;
   transition: 0.2s ease;
-} 
+}
 
-.login-form .input-wrapper .input-field:valid ~ i.eye-icon {
+.login-form .input-wrapper .input-field:valid~i.eye-icon {
   display: block;
 }
 
@@ -81,7 +81,7 @@ body {
   border-color: black;
 }
 
-.login-form .input-wrapper .input-field:focus ~i:not(.eye-icon) {
+.login-form .input-wrapper .input-field:focus~i:not(.eye-icon) {
   color: grey;
 }
 
@@ -102,6 +102,10 @@ body {
   margin-top: 1rem;
   border-radius: 0.31rem;
   transition: 0.2s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-form .login-button:hover {

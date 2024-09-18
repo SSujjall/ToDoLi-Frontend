@@ -143,3 +143,24 @@ export const addTask = async (taskName, description, dueDate, listId) => {
   const result = await response.json();
   return result;
 };
+
+/* Sub-Task */
+
+export const addSubTask = async (subTaskName, taskId) => {
+  const response = await fetch(`${API_BASE_URL}/SubTasks/AddSubTask`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+    body: JSON.stringify({ subTaskName, taskId }),
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to add subtask");
+  }
+
+  const result = await response.json();
+  return result;
+};

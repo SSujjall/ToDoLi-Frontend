@@ -45,7 +45,7 @@ const TaskDisplay = ({ listId, listName }) => {
       <div className="task-content">
         <div className="task-header">
           <h1>{listName}</h1>
-          <Button text={"Add Task"} onClick={handleAddTaskClick}></Button>
+          <Button text={"Add Task"} onClick={handleAddTaskClick} icon={"add_circle"}></Button>
         </div>
 
         <table className="list-table">
@@ -80,6 +80,7 @@ const TaskDisplay = ({ listId, listName }) => {
           onClose={handleAddTaskClick} // Pass function to close sidebar
           listId={listId} // Pass the listId to the sidebar
           onTaskAdded={refreshTasks} // Pass function to refresh tasks
+          className={isAddTaskSidebarOpen ? 'open' : ''}
         />
       )}
     </div>

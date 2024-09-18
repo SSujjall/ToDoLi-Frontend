@@ -18,12 +18,11 @@
   width: 25rem; /* Adjust width as needed */
   height: 100%;
   background-color: #f4f4f4;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -36,11 +35,14 @@
   margin: 0;
 }
 
-.close-btn {
-  background: none;
+.sidebar-header button {
   border: none;
-  font-size: 24px;
   cursor: pointer;
+  color: black;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  background-color: transparent;
 }
 
 .task-form {
