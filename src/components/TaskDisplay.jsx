@@ -49,13 +49,6 @@ const TaskDisplay = ({ listId, listName }) => {
         </div>
 
         <table className="list-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Task Name</th>
-              <th>Status</th>
-            </tr>
-          </thead>
           <tbody>
             {tasks.length === 0 ? (
               <tr>
@@ -64,9 +57,7 @@ const TaskDisplay = ({ listId, listName }) => {
             ) : (
               tasks.map((task) => (
                 <tr key={task.id}>
-                  <td>{task.id}</td>
                   <td>{task.taskName}</td>
-                  <td>{task.status}</td>
                 </tr>
               ))
             )}

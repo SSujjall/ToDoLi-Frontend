@@ -1,5 +1,6 @@
 .sidebar-open .task-content {
-  margin-right: 25rem; /* Adjust based on the width of the sidebar */
+  margin-right: 24rem;
+  /* Adjust based on the width of the sidebar */
 }
 
 .list-table {
@@ -7,7 +8,8 @@
   border-collapse: collapse;
 }
 
-.list-table th, .list-table td {
+.list-table th,
+.list-table td {
   border: 1px solid #ddd;
 }
 
@@ -15,7 +17,8 @@
   position: fixed;
   right: 0;
   top: 0;
-  width: 25rem; /* Adjust width as needed */
+  width: 24rem;
+  /* Adjust width as needed */
   height: 100%;
   background-color: #f4f4f4;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
@@ -48,19 +51,141 @@
 .task-form {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: 0.8rem;
 }
 
-.task-form label {
-  margin-bottom: 5px;
+.task-form h2 {
+  margin-bottom: 0.8rem;
 }
 
 .task-form input,
 .task-form textarea {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  padding: 0.6rem;
+  margin-bottom: 1.2rem;
+  border: none;
+  outline: none;
   border-radius: 4px;
+  background-color: #DAD9D9;
+  color: #5B5B5B;
+  resize: none;
+}
+
+.task-form textarea {
+  height: 10rem;
+}
+
+.subtask-div ul {
+  padding: 0;
+  margin: 0;
+}
+
+.subtask-item {
+  display: flex;
+  justify-content: space-between; /* Keep the delete button at the end */
+  align-items: center;
+  padding: 0.5rem 0;
+  max-height: 3rem;
+  border-bottom: 1px solid #cbcbcb;
+  cursor: pointer;
+}
+
+.subtask-item button {
+  width: 2rem;
+  height: 2rem;
+  margin-top: -0.6rem;
+  background-color: #c9302c;
+  display: none;
+}
+
+.subtask-item:hover button {
+  background-color: #c9302c;
+  display:initial;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 3s;
+}
+
+.subtask-item-left {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  vertical-align: middle;
+  margin-top: 1.3rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+.subtask-div li {
+  padding: 1rem 0rem 0.3rem 0rem;
+  border-bottom: 1px solid #cbcbcb;
+  list-style-type: none;
+  display: flex;
+}
+
+.subtask-div input {
+  margin-right: 0.4rem;
+}
+
+.subtask-div {
+  height: 12rem;
+  overflow-y: auto;
+  max-height: 12rem;
+}
+
+.subtask-div::-webkit-scrollbar {
+  width: 4px;
+}
+
+.subtask-div::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Round the corners of the scrollbar thumb */
+}
+
+.due-date {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.due-date input {
+  padding: 0.2rem;
+  margin-left: 0.2rem;
+  margin-bottom: 0;
+  width: 7.2rem;
+}
+
+.subtask-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #DAD9D9;
+  padding: 0.4rem;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+.subtask-container input {
+  margin: 0;
+  background-color: transparent;
+  width: 85%;
+}
+
+.subtask-container button {
+  width: 3rem;
+  height: 2rem;
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 0;
+}
+
+.subtask-container button:hover {
+  background-color: #1f848d;
 }
 
 .task-form-actions {
@@ -68,20 +193,37 @@
   justify-content: space-between;
 }
 
-.save-task-btn,
-.delete-task-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.task-form-actions button {
+  width: 10rem;
+  height: 3rem;
 }
 
-.save-task-btn {
-  background-color: #4caf50;
-  color: white;
+.task-form-actions button:first-child {
+  background-color: #EEC211;
+  color: #434343;
+  font-weight: 600;
 }
 
-.delete-task-btn {
+.task-form-actions button:last-child {
+  background-color: #CDCDCD;
+  color: #434343;
+  font-weight: 600;
+}
+
+.task-form-actions button:first-child:hover {
+  background-color: #d5ae10;
+}
+
+.task-form-actions button:last-child:hover {
   background-color: #f44336;
   color: white;
+}
+
+.input-error {
+  border: 1px solid red;
+}
+
+.input-error:focus {
+  outline: none;
+  border-color: darkred;
 }
