@@ -52,6 +52,7 @@ export const registerUser = async (
   }
 };
 
+/* Lists */
 export const fetchList = async () => {
   const token = localStorage.getItem("token");
 
@@ -73,19 +74,6 @@ export const fetchList = async () => {
 
   const result = await response.json();
   return result.data; // Return the data array
-};
-
-export const fetchTasks = async (listId) => {
-  const response = await fetch(`${API_BASE_URL}/Tasks/GetAll/${listId}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch tasks: ${response.statusText}`);
-  }
-  const result = await response.json();
-  return result.data; // Adjust according to your API response structure
 };
 
 export const addList = async (listName) => {
@@ -120,6 +108,40 @@ export const deleteList = async (listId) => {
     const result = await response.json();
     throw new Error(result.errors[0] || "Failed to delete list");
   }
+  const result = await response.json();
+  return result;
+};
+
+/* Tasks */
+export const fetchTasks = async (listId) => {
+  const response = await fetch(`${API_BASE_URL}/Tasks/GetAll/${listId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to fetch tasks");
+  }
+  const result = await response.json();
+  return result.data; // Adjust according to your API response structure
+};
+
+export const getTaskById = async (taskId) => {
+  const response = await fetch(`${API_BASE_URL}/Tasks/GetById/${taskId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to get task.");
+  }
 
   const result = await response.json();
   return result;
@@ -145,6 +167,25 @@ export const addTask = async (taskName, description, dueDate, listId) => {
 };
 
 /* Sub-Task */
+export const fetchSubtasks = async (taskId) => {
+  const response = await fetch(
+    `${API_BASE_URL}/SubTasks/GetAllSubTasks/${taskId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch subtasks: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+  return result.data; // Adjust according to your API response structure
+};
 
 export const addSubTask = async (subTaskName, taskId) => {
   const response = await fetch(`${API_BASE_URL}/SubTasks/AddSubTask`, {
@@ -161,6 +202,26 @@ export const addSubTask = async (subTaskName, taskId) => {
     throw new Error(result.errors[0] || "Failed to add subtask");
   }
 
+  const result = await response.json();
+  return result;
+};
+
+export const deleteSubtask = async (taskId) => {
+  const response = await fetch(
+    `${API_BASE_URL}/SubTasks/DeleteSubTask/${taskId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to delete subtask");
+  }
   const result = await response.json();
   return result;
 };

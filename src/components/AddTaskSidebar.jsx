@@ -29,7 +29,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
   const handleSaveTask = async () => {
     try {
       setIsSaving(true); // Indicate saving in progress
-  
+
       // Step 1: Save the task first
       const savedTask = await addTask(
         taskName,
@@ -37,12 +37,13 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
         dueDate,
         listId
       );
-  
+
       // Access the taskId from the response
-      if (savedTask && savedTask.taskId) { // Change here to access taskId
-  
+      if (savedTask && savedTask.taskId) {
+        // Change here to access taskId
+
         console.log("Task saved successfully with ID:", savedTask.taskId);
-        
+
         // Step 2: Save each subtask if there are any, using the saved task's ID
         if (subTasks.length > 0) {
           for (let subTaskName of subTasks) {
@@ -56,7 +57,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
             }
           }
         }
-  
+
         onTaskAdded(); // Refresh the task list in the main component
         onClose(); // Close the sidebar after saving
       } else {
@@ -120,7 +121,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
                   <input type="checkbox" className="checkbox" />
                   <span>{subTask}</span>
                 </div>
-                
+
                 <Button
                   icon={"delete"}
                   onClick={() => handleDeleteSubTask(index)}
