@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import Index from './pages/Index';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   return(
@@ -13,6 +14,9 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/index" element={<Index />} />
+
+        {/* If route is incorrect then it shows the 404 page */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   )

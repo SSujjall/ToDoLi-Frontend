@@ -1,3 +1,7 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 /* Importing Google Fonts - Montserrat */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
@@ -19,11 +23,6 @@ body {
 #root {
   width: 100%;
   padding: 0;
-}
-
-.form-title {
-  text-align: center;
-  margin-bottom: 1rem;
 }
 
 .login-container {

@@ -36,7 +36,7 @@ const Signup = () => {
 
   return (
     <div className="login-container">
-      <h1 className="form-title">Signup</h1>
+      <h1 className="text-3xl text-center mb-6 font-bold">Signup</h1>
 
       <form onSubmit={handleRegister} className="login-form">
         <InputField
