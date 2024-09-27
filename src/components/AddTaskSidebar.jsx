@@ -73,7 +73,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
   return (
     <div className="add-task-sidebar">
       <div className="sidebar-header">
-        <h2>Task:</h2>
+        <h2 className="text-2xl font-bold">Task:</h2>
         <Button icon={"close"} onClick={onClose}></Button>
       </div>
 
@@ -92,7 +92,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
         />
 
         <div className="due-date">
-          <label>Due Date: </label>
+          <label>Due Date:&nbsp;</label>
           <input
             type="date"
             value={dueDate}
@@ -101,7 +101,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
         </div>
 
         {/* Subtask section */}
-        <h2>Sub-Task: </h2>
+        <h2 className="text-2xl font-bold">Sub-Task: </h2>
         <div className="subtask-container">
           <input
             type="text"
