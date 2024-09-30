@@ -6,7 +6,7 @@ import { Card } from "./Card";
 import "../css/Card.css";
 import "../css/Sidebar.css";
 import InputField from "./InputField";
-import ConfirmationModal from "./DeleteModal";
+import ConfirmationModal from "./ConfirmationModal";
 
 // eslint-disable-next-line react/prop-types
 const Sidebar = ({ onSelectItem }) => {

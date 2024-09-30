@@ -74,6 +74,20 @@
   height: 10rem;
 }
 
+
+.due-date {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.due-date input {
+  padding: 0.2rem;
+  margin-left: 0.2rem;
+  margin-bottom: 0;
+  width: 9rem;
+}
+
 .subtask-div ul {
   padding: 0;
   margin: 0;
@@ -144,19 +158,6 @@
   /* Color of the scrollbar thumb */
   border-radius: 10px;
   /* Round the corners of the scrollbar thumb */
-}
-
-.due-date {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.2rem;
-}
-
-.due-date input {
-  padding: 0.2rem;
-  margin-left: 0.2rem;
-  margin-bottom: 0;
-  width: 7.2rem;
 }
 
 .subtask-container {

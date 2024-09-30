@@ -7,8 +7,10 @@ import {
   fetchSubtasks,
   updateTask,
   deleteSubtask,
+  deleteTask
 } from "../services/Api";
 import { Button } from "./Button";
+import ConfirmationModal from "./ConfirmationModal";
 
 const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
   const [taskName, setTaskName] = useState("");
@@ -17,19 +19,21 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
   const [subTasks, setSubTasks] = useState([]); // State for managing subtasks
   const [newSubTask, setNewSubTask] = useState(""); // Input for new subtask
   const [isSaving, setIsSaving] = useState(false); // State to track saving status
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [subTaskToDelete, setSubTaskToDelete] = useState(null); // State for subtask deletion
+  
   useEffect(() => {
     if (task) {
       // If a task is provided, populate the fields
       setTaskName(task.taskName);
       setTaskDescription(task.description || ""); // Assuming task has description
-      setDueDate(task.dueDate || ""); // Assuming task has dueDate
+      setDueDate(task.dueDate ? task.dueDate.split("T")[0] : "");
 
       // Fetch and load subtasks
       const loadSubtasks = async () => {
         try {
           const subtasksData = await fetchSubtasks(task.id);
-          console.log("fetchSubtask run in AddTaskSidebar line 32");
+          // console.log("fetchSubtask run in AddTaskSidebar line 32");
           setSubTasks(
             subtasksData.map((subtask) => ({
               id: subtask.id,
@@ -60,27 +64,37 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
   };
 
   // Function to remove a subtask
-  const handleDeleteSubTask = async (index) => {
-    const subTaskToDelete = subTasks[index];
+  const handleDeleteSubTask = (index) => {
+    setSubTaskToDelete(subTasks[index]); // Set the subtask to delete
+    setIsModalOpen(true); // Open the confirmation modal
+  };
 
-    // If subTask has an id (i.e., it's saved in the database), call the delete API
-    if (subTaskToDelete.id) {
-      try {
-        await deleteSubtask(subTaskToDelete.id); // Call the deleteSubtask API
-        console.log(
-          `Subtask with id ${subTaskToDelete.id} deleted successfully`
-        );
-      } catch (err) {
-        console.error(
-          `Error deleting subtask with id ${subTaskToDelete.id}:`,
-          err.message
-        );
-        return; // If deletion fails, do not remove it from the UI
+  // Function to confirm subtask deletion
+  const confirmDeleteSubTask = async () => {
+    if (subTaskToDelete) {
+      const index = subTasks.findIndex(sub => sub.id === subTaskToDelete.id);
+      
+      // If subTask has an id (i.e., it's saved in the database), call the delete API
+      if (subTaskToDelete.id) {
+        try {
+          await deleteSubtask(subTaskToDelete.id); // Call the deleteSubtask API
+          console.log(
+            `Subtask with id ${subTaskToDelete.id} deleted successfully`
+          );
+        } catch (err) {
+          console.error(
+            `Error deleting subtask with id ${subTaskToDelete.id}:`,
+            err.message
+          );
+          return; // If deletion fails, do not remove it from the UI
+        }
       }
-    }
 
-    // Remove subtask from UI
-    setSubTasks(subTasks.filter((_, i) => i !== index));
+      // Remove subtask from UI
+      setSubTasks(subTasks.filter((_, i) => i !== index));
+      setSubTaskToDelete(null); // Reset subTaskToDelete
+    }
+    setIsModalOpen(false); // Close the modal after the action
   };
 
   // Function to save task and subtasks
@@ -90,13 +104,13 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
 
       // Check if updating an existing task
       if (task) {
-        console.log(task);
+        // console.log(task);
         // If task exists, update it
         await updateTask(task.id, taskName, taskDescription, dueDate, false); // Assuming isComplete is false
 
         // Fetch existing subtasks
         const existingSubtasksData = await fetchSubtasks(task.id);
-        console.log("fetchSubtask run in AddTaskSidebar line 99");
+        // console.log("fetchSubtask run in AddTaskSidebar line 99");
 
         const existingSubtaskNames = existingSubtasksData.map(
           (subtask) => subtask.subTaskName
@@ -154,6 +168,24 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
     } finally {
       setIsSaving(false); // Reset saving status
     }
+  };
+
+  // Function to handle task deletion
+  const handleDeleteTask = () => {
+    setIsModalOpen(true); // Open the confirmation modal
+  };
+
+  // Function to confirm task deletion
+  const confirmDeleteTask = async () => {
+    if (task) {
+      try {
+        await deleteTask(task.id);
+        onTaskAdded(); // Refresh tasks after deletion
+      } catch (err) {
+        console.error(`Error deleting task:`, err.message);
+      }
+    }
+    onClose();
   };
 
   return (
@@ -225,14 +257,39 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
             disabled={isSaving}
           ></Button>
 
-          <Button
-            className="cancel-button"
-            text={"Cancel"}
-            onClick={onClose}
-            disabled={isSaving}
-          ></Button>
+          {task ? (
+            <Button
+              className="delete-button"
+              text={"Delete"}
+              onClick={handleDeleteTask}
+              disabled={isSaving}
+            ></Button>
+          ) : (
+            <Button
+              className="cancel-button"
+              text={"Cancel"}
+              onClick={onClose}
+              disabled={isSaving}
+            ></Button>
+          )}
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDeleteTask} // Confirm deletion action
+        message={"Are you sure you want to delete this task?"} // Modal message
+      />
+
+      {/* Confirmation Modal for Subtask Deletion */}
+      <ConfirmationModal
+        isOpen={isModalOpen && !!subTaskToDelete}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDeleteSubTask} // Confirm deletion action for subtask
+        message={`Are you sure you want to delete the subtask "${subTaskToDelete?.name}"?`} // Modal message
+      />
     </div>
   );
 };

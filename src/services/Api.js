@@ -191,6 +191,24 @@ export const updateTask = async (
   return result;
 };
 
+export const deleteTask = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/Tasks/DeleteTask/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to delete task");
+  }
+
+  const result = await response.json();
+  return result;
+};
+
 /* Sub-Task */
 export const fetchSubtasks = async (taskId) => {
   const response = await fetch(
@@ -206,7 +224,7 @@ export const fetchSubtasks = async (taskId) => {
 
   // Check if the response is 404 (no subtasks found)
   if (response.status === 404) {
-    console.warn(`No subtasks found for task ID ${taskId}`);
+    console.warn(`No subtasks found for task ID ${taskId} when running fetchSubtasks function`);
     return []; // Return an empty array if there are no subtasks
   }
 

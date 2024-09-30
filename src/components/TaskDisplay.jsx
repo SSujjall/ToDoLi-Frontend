@@ -18,11 +18,11 @@ const TaskDisplay = ({ listId, listName }) => {
         setTasks([]); // Clear tasks while loading new data
         const data = await fetchTasks(listId); // Fetch tasks based on listId
         setTasks(data);
-  
+
         // Fetch subtask counts for each task
         data.forEach(async (task) => {
           const subtasks = await fetchSubtasks(task.id);
-          console.log("fetchSubtask run in TaskDisplay line 25");
+          // console.log("fetchSubtask run in TaskDisplay line 25");
           setSubtaskCounts((prev) => ({
             ...prev,
             [task.id]: subtasks.length, // Store subtask count for each task
@@ -32,7 +32,7 @@ const TaskDisplay = ({ listId, listName }) => {
         console.error("Error fetching tasks or subtasks:", err.message);
       }
     };
-  
+
     if (listId) {
       getTasks();
     }
@@ -44,17 +44,18 @@ const TaskDisplay = ({ listId, listName }) => {
       const data = await fetchTasks(listId);
       setTasks(data);
 
-      // Refresh subtask counts for each task
-      data.forEach(async (task) => {
-        const subtasks = await fetchSubtasks(task.id);
-        console.log("fetchSubtask run in TaskDisplay line 50");
-        setSubtaskCounts((prev) => ({
-          ...prev,
-          [task.id]: subtasks.length, // Update subtask count
-        }));
-      });
+      const counts = {};
+      await Promise.all(
+        data.map(async (task) => {
+          const subtasks = await fetchSubtasks(task.id);
+          counts[task.id] = subtasks.length;
+        })
+      );
+
+      setSubtaskCounts(counts);
     } catch (err) {
       console.error(err.message);
+      setTasks([]); // Ensure tasks is empty if there's an error
     }
   };
 
