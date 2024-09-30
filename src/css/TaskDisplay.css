@@ -9,41 +9,9 @@
     transition: margin-right 0.3s ease;
 }
 
-.task-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .task-header button {
     width: 10rem;
     margin: 0;
-}
-
-.list-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.list-table th,
-.list-table td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.list-table th {
-    background-color: #f4f4f4;
-}
-
-.list-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.list-table tr:hover {
-    background-color: #f1f1f1;
 }
 
 .task-checkbox {
@@ -57,4 +25,5 @@
     display: flex;
     margin-left: 1.5rem;
     margin-top: 0.4rem;
+    color: #797979;
 }

@@ -12,6 +12,7 @@
 
 .sidebar.collapsed {
     width: 4rem;
+    min-width: 4rem;
 }
 
 .hamburger-icon {

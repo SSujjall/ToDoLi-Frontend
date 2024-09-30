@@ -83,16 +83,22 @@ const TaskDisplay = ({ listId, listName }) => {
       }`}
     >
       <div className="task-content">
-        <div className="task-header">
-          <h1 className="text-2xl font-semibold">{listName}</h1>
+        <div className="task-header flex justify-between items-center">
+          <div className="flex items-center">
+            <h1 className="text-5xl font-bold text-slate-700">{listName}</h1>
+            <span className="ml-2 inline-flex items-center text-3xl font-bold justify-center w-11 h-10 text-slate-50 bg-slate-700 rounded-full">
+              {tasks.length}
+            </span>
+          </div>
+
           <Button
             text={"Add Task"}
             onClick={handleAddTaskClick}
             icon={"add_circle"}
-          ></Button>
+          />
         </div>
 
-        <table className="list-table">
+        <table className="w-full">
           <tbody>
             {tasks.length === 0 ? (
               <tr>
@@ -101,15 +107,33 @@ const TaskDisplay = ({ listId, listName }) => {
             ) : (
               tasks.map((task) => (
                 <tr key={task.id} onClick={() => handleTaskClick(task)}>
-                  <td>
+                  <td className="p-3 border-b rounded border-slate-400 hover:bg-gray-300 hover:bg-opacity-50">
                     <div className="main-task-div">
                       <input type="checkbox" className="task-checkbox" />
-                      {task.taskName}
+                      <span className=" font-semibold text-xl">
+                        {task.taskName}
+                      </span>
                     </div>
                     <div className="task-date-div">
-                      Due Date: {task.dueDate ? formatDate(task.dueDate) : ""}
+                      <span className="material-icons mr-1 text-slate-600">
+                        calendar_month
+                      </span>
+                      <span className="font-semibold text-sm my-auto">
+                        {task.dueDate ? formatDate(task.dueDate) : ""}
+                      </span>
                       {subtaskCounts[task.id] > 0 && (
-                        <p>&nbsp;| Subtasks: {subtaskCounts[task.id]}</p>
+                        <p>
+                          &nbsp;|{" "}
+                          <span
+                            className="ml-2 inline-flex text-sm items-center 
+                          justify-center w-5 h-5 text-white bg-slate-600 rounded"
+                          >
+                            {subtaskCounts[task.id]}
+                          </span>{" "}
+                          <span className="font-semibold text-sm my-auto">
+                            Subtasks
+                          </span>
+                        </p>
                       )}
                     </div>
                   </td>
