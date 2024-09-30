@@ -166,6 +166,25 @@ export const addTask = async (taskName, description, dueDate, listId) => {
   return result;
 };
 
+export const updateTask = async (id, taskName, description, dueDate, isComplete) => {
+  const response = await fetch(`${API_BASE_URL}/Tasks/UpdateTask`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token in the Authorization header
+    },
+    body: JSON.stringify({ id, taskName, description, dueDate, isComplete }),
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error(result.errors[0] || "Failed to update task");
+  }
+
+  const result = await response.json();
+  return result;
+};
+
 /* Sub-Task */
 export const fetchSubtasks = async (taskId) => {
   const response = await fetch(
@@ -206,9 +225,9 @@ export const addSubTask = async (subTaskName, taskId) => {
   return result;
 };
 
-export const deleteSubtask = async (taskId) => {
+export const deleteSubtask = async (subtaskId) => {
   const response = await fetch(
-    `${API_BASE_URL}/SubTasks/DeleteSubTask/${taskId}`,
+    `${API_BASE_URL}/SubTasks/DeleteSubTask/${subtaskId}`,
     {
       method: "DELETE",
       headers: {

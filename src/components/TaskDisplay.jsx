@@ -10,6 +10,7 @@ const TaskDisplay = ({ listId, listName }) => {
   const [tasks, setTasks] = useState([]);
   const [subtaskCounts, setSubtaskCounts] = useState({});
   const [isAddTaskSidebarOpen, setIsAddTaskSidebarOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null); // State to hold selected task data
 
   useEffect(() => {
     const getTasks = async () => {
@@ -63,6 +64,13 @@ const TaskDisplay = ({ listId, listName }) => {
   // Toggle sidebar visibility
   const handleAddTaskClick = () => {
     setIsAddTaskSidebarOpen(!isAddTaskSidebarOpen);
+    setSelectedTask(null); // Reset selected task when closing the sidebar
+  };
+
+  // Handle task click to open the sidebar with the task details
+  const handleTaskClick = async (task) => {
+    setSelectedTask(task); // Set the selected task
+    setIsAddTaskSidebarOpen(true); // Open the sidebar
   };
 
   return (
@@ -73,7 +81,7 @@ const TaskDisplay = ({ listId, listName }) => {
     >
       <div className="task-content">
         <div className="task-header">
-          <h1>{listName}</h1>
+          <h1 className="text-2xl font-semibold">{listName}</h1>
           <Button
             text={"Add Task"}
             onClick={handleAddTaskClick}
@@ -89,7 +97,7 @@ const TaskDisplay = ({ listId, listName }) => {
               </tr>
             ) : (
               tasks.map((task) => (
-                <tr key={task.id}>
+                <tr key={task.id} onClick={() => handleTaskClick(task)}>
                   <td>
                     <div className="main-task-div">
                       <input type="checkbox" className="task-checkbox" />
@@ -116,6 +124,7 @@ const TaskDisplay = ({ listId, listName }) => {
           listId={listId} // Pass the listId to the sidebar
           onTaskAdded={refreshTasks} // Pass function to refresh tasks
           className={isAddTaskSidebarOpen ? "open" : ""}
+          task={selectedTask} // Pass the selected task data to the sidebar
         />
       )}
     </div>

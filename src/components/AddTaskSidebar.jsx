@@ -1,16 +1,48 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/AddTaskSidebar.css"; // Create this CSS for styling the sidebar
-import { addSubTask, addTask } from "../services/Api"; // Assuming you have an API call for adding tasks
+import {
+  addSubTask,
+  addTask,
+  fetchSubtasks,
+  updateTask,
+} from "../services/Api"; // Assuming you have an API call for adding tasks
 import { Button } from "./Button";
 
-const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
+const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [subTasks, setSubTasks] = useState([]); // State for managing subtasks
   const [newSubTask, setNewSubTask] = useState(""); // Input for new subtask
   const [isSaving, setIsSaving] = useState(false); // State to track saving status
+
+  useEffect(() => {
+    if (task) {
+      // If a task is provided, populate the fields
+      setTaskName(task.taskName);
+      setTaskDescription(task.description || ""); // Assuming task has description
+      setDueDate(task.dueDate || ""); // Assuming task has dueDate
+
+      // Fetch and load subtasks
+      const loadSubtasks = async () => {
+        try {
+          const subtasksData = await fetchSubtasks(task.id);
+          setSubTasks(subtasksData.map((subtask) => subtask.subTaskName)); // Set subtask names
+        } catch (err) {
+          console.error("Error fetching subtasks:", err);
+        }
+      };
+
+      loadSubtasks();
+    } else {
+      // Reset fields if no task is selected
+      setTaskName("");
+      setTaskDescription("");
+      setDueDate("");
+      setSubTasks([]);
+    }
+  }, [task]);
 
   // Function to add a subtask to the subTasks array
   const handleAddSubTask = () => {
@@ -30,39 +62,66 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded }) => {
     try {
       setIsSaving(true); // Indicate saving in progress
 
-      // Step 1: Save the task first
-      const savedTask = await addTask(
-        taskName,
-        taskDescription,
-        dueDate,
-        listId
-      );
+      // Check if updating an existing task
+      if (task) {
+        console.log(task);
+        // If task exists, update it
+        await updateTask(task.id, taskName, taskDescription, dueDate, false); // Assuming isComplete is false
 
-      // Access the taskId from the response
-      if (savedTask && savedTask.taskId) {
-        // Change here to access taskId
+        // Fetch existing subtasks
+        const existingSubtasksData = await fetchSubtasks(task.id);
 
-        console.log("Task saved successfully with ID:", savedTask.taskId);
+        const existingSubtaskNames = existingSubtasksData.map(
+          (subtask) => subtask.subTaskName
+        );
 
-        // Step 2: Save each subtask if there are any, using the saved task's ID
-        if (subTasks.length > 0) {
-          for (let subTaskName of subTasks) {
-            try {
-              await addSubTask(subTaskName, savedTask.taskId); // Use taskId here
-            } catch (err) {
-              console.error(
-                `Error saving subtask: ${subTaskName}`,
-                err.message
-              );
-            }
+        // Determine new subtasks to be added
+        const newSubTasksToAdd = subTasks.filter(
+          (subTask) => !existingSubtaskNames.includes(subTask)
+        );
+
+        for (let subTaskName of newSubTasksToAdd) {
+          try {
+            await addSubTask(subTaskName, task.id); // Use task.id here
+          } catch (err) {
+            console.error(`Error saving subtask: ${subTaskName}`, err.message);
           }
         }
-
-        onTaskAdded(); // Refresh the task list in the main component
-        onClose(); // Close the sidebar after saving
       } else {
-        console.error("Task was not saved correctly, no taskId was returned.");
+        // If no task exists, create a new one
+        const savedTask = await addTask(
+          taskName,
+          taskDescription,
+          dueDate,
+          listId
+        );
+
+        // Access the taskId from the response
+        if (savedTask && savedTask.taskId) {
+          console.log("Task saved successfully with ID:", savedTask.taskId);
+
+          // Save each subtask if there are any, using the saved task's ID
+          if (subTasks.length > 0) {
+            for (let subTaskName of subTasks) {
+              try {
+                await addSubTask(subTaskName, savedTask.taskId); // Use taskId here
+              } catch (err) {
+                console.error(
+                  `Error saving subtask: ${subTaskName}`,
+                  err.message
+                );
+              }
+            }
+          }
+        } else {
+          console.error(
+            "Task was not saved correctly, no taskId was returned."
+          );
+        }
       }
+
+      onTaskAdded(); // Refresh the task list in the main component
+      onClose(); // Close the sidebar after saving
     } catch (err) {
       console.error("Error saving task:", err.message);
     } finally {
