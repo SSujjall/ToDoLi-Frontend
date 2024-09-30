@@ -166,7 +166,13 @@ export const addTask = async (taskName, description, dueDate, listId) => {
   return result;
 };
 
-export const updateTask = async (id, taskName, description, dueDate, isComplete) => {
+export const updateTask = async (
+  id,
+  taskName,
+  description,
+  dueDate,
+  isComplete
+) => {
   const response = await fetch(`${API_BASE_URL}/Tasks/UpdateTask`, {
     method: "PUT",
     headers: {
@@ -198,12 +204,18 @@ export const fetchSubtasks = async (taskId) => {
     }
   );
 
+  // Check if the response is 404 (no subtasks found)
+  if (response.status === 404) {
+    console.warn(`No subtasks found for task ID ${taskId}`);
+    return []; // Return an empty array if there are no subtasks
+  }
+
   if (!response.ok) {
     throw new Error(`Failed to fetch subtasks: ${response.statusText}`);
   }
 
   const result = await response.json();
-  return result.data; // Adjust according to your API response structure
+  return result.data;
 };
 
 export const addSubTask = async (subTaskName, taskId) => {

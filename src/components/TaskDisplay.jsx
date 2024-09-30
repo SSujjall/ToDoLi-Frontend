@@ -18,20 +18,21 @@ const TaskDisplay = ({ listId, listName }) => {
         setTasks([]); // Clear tasks while loading new data
         const data = await fetchTasks(listId); // Fetch tasks based on listId
         setTasks(data);
-
+  
         // Fetch subtask counts for each task
         data.forEach(async (task) => {
           const subtasks = await fetchSubtasks(task.id);
+          console.log("fetchSubtask run in TaskDisplay line 25");
           setSubtaskCounts((prev) => ({
             ...prev,
             [task.id]: subtasks.length, // Store subtask count for each task
           }));
         });
       } catch (err) {
-        console.error(err.message);
+        console.error("Error fetching tasks or subtasks:", err.message);
       }
     };
-
+  
     if (listId) {
       getTasks();
     }
@@ -46,6 +47,7 @@ const TaskDisplay = ({ listId, listName }) => {
       // Refresh subtask counts for each task
       data.forEach(async (task) => {
         const subtasks = await fetchSubtasks(task.id);
+        console.log("fetchSubtask run in TaskDisplay line 50");
         setSubtaskCounts((prev) => ({
           ...prev,
           [task.id]: subtasks.length, // Update subtask count

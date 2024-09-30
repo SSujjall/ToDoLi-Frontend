@@ -6,7 +6,8 @@ import {
   addTask,
   fetchSubtasks,
   updateTask,
-} from "../services/Api"; // Assuming you have an API call for adding tasks
+  deleteSubtask,
+} from "../services/Api";
 import { Button } from "./Button";
 
 const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
@@ -28,7 +29,13 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
       const loadSubtasks = async () => {
         try {
           const subtasksData = await fetchSubtasks(task.id);
-          setSubTasks(subtasksData.map((subtask) => subtask.subTaskName)); // Set subtask names
+          console.log("fetchSubtask run in AddTaskSidebar line 32");
+          setSubTasks(
+            subtasksData.map((subtask) => ({
+              id: subtask.id,
+              name: subtask.subTaskName,
+            }))
+          ); // Set subtask names
         } catch (err) {
           console.error("Error fetching subtasks:", err);
         }
@@ -47,13 +54,32 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
   // Function to add a subtask to the subTasks array
   const handleAddSubTask = () => {
     if (newSubTask.trim()) {
-      setSubTasks([...subTasks, newSubTask]);
+      setSubTasks([...subTasks, { name: newSubTask }]);
       setNewSubTask("");
     }
   };
 
   // Function to remove a subtask
-  const handleDeleteSubTask = (index) => {
+  const handleDeleteSubTask = async (index) => {
+    const subTaskToDelete = subTasks[index];
+
+    // If subTask has an id (i.e., it's saved in the database), call the delete API
+    if (subTaskToDelete.id) {
+      try {
+        await deleteSubtask(subTaskToDelete.id); // Call the deleteSubtask API
+        console.log(
+          `Subtask with id ${subTaskToDelete.id} deleted successfully`
+        );
+      } catch (err) {
+        console.error(
+          `Error deleting subtask with id ${subTaskToDelete.id}:`,
+          err.message
+        );
+        return; // If deletion fails, do not remove it from the UI
+      }
+    }
+
+    // Remove subtask from UI
     setSubTasks(subTasks.filter((_, i) => i !== index));
   };
 
@@ -70,6 +96,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
 
         // Fetch existing subtasks
         const existingSubtasksData = await fetchSubtasks(task.id);
+        console.log("fetchSubtask run in AddTaskSidebar line 99");
 
         const existingSubtaskNames = existingSubtasksData.map(
           (subtask) => subtask.subTaskName
@@ -77,14 +104,14 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
 
         // Determine new subtasks to be added
         const newSubTasksToAdd = subTasks.filter(
-          (subTask) => !existingSubtaskNames.includes(subTask)
+          (subTask) => !existingSubtaskNames.includes(subTask.name)
         );
 
-        for (let subTaskName of newSubTasksToAdd) {
+        for (let subTask of newSubTasksToAdd) {
           try {
-            await addSubTask(subTaskName, task.id); // Use task.id here
+            await addSubTask(subTask.name, task.id); // Use task.id here
           } catch (err) {
-            console.error(`Error saving subtask: ${subTaskName}`, err.message);
+            console.error(`Error saving subtask: ${subTask.name}`, err.message);
           }
         }
       } else {
@@ -102,12 +129,12 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
 
           // Save each subtask if there are any, using the saved task's ID
           if (subTasks.length > 0) {
-            for (let subTaskName of subTasks) {
+            for (let subTask of subTasks) {
               try {
-                await addSubTask(subTaskName, savedTask.taskId); // Use taskId here
+                await addSubTask(subTask.name, savedTask.taskId); // Use taskId here
               } catch (err) {
                 console.error(
-                  `Error saving subtask: ${subTaskName}`,
+                  `Error saving subtask: ${subTask.name}`,
                   err.message
                 );
               }
@@ -178,7 +205,7 @@ const AddTaskSidebar = ({ onClose, listId, onTaskAdded, task }) => {
               <li key={index} className="subtask-item">
                 <div className="subtask-item-left">
                   <input type="checkbox" className="checkbox" />
-                  <span>{subTask}</span>
+                  <span>{subTask.name}</span>
                 </div>
 
                 <Button
